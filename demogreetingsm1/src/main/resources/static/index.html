@@ -4,7 +4,9 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script language="javascript">
+
         var xmlhttp;
+
         function init() {
             // put more code here in case you are concerned about browsers that do not provide XMLHttpRequest object directly
             xmlhttp = new XMLHttpRequest();
@@ -18,13 +20,13 @@
             xmlhttp.send(null);
 
             xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4) {
-                    if ( xmlhttp.status == 200) {
+                if (xmlhttp.readyState === 4) {
+                    if ( xmlhttp.status === 200) {
                         var sondage = JSON.parse(xmlhttp.responseText);
                         for(var i = 0; i < sondage.length; i++) {
                             var opt = document.createElement('option');
                             opt.innerHTML = sondage[i].question;
-                            opt.value = sondage.question;
+                            opt.value = sondage[i].id;
                             lesSondages.appendChild(opt);
                         }
                     }
@@ -36,7 +38,7 @@
 
         }
 
-        function getSondage() {
+        /*function getSondages() {
             var baseurl = document.getElementById("baseurl").value;
             var sondageid = document.getElementById("sondageid").value;
             var url = baseurl + "/sondages/" + sondageid;
@@ -53,44 +55,104 @@
                         alert("Error!!! -> " + xmlhttp.responseText);
                 }
             };
+        }*/
+
+        function getSondage() {
+
+            var baseUrl = document.getElementById("baseurl").value;
+            var sondageId = document.getElementById("lesSondages").value;
+            var url = baseUrl + "/sondages/" + sondageId;
+
+            xmlhttp.open('GET',url,true);
+            xmlhttp.send(null);
+
+            xmlhttp.onreadystatechange = function() {
+                if(xmlhttp.readyState === 4) {
+                    if(xmlhttp.status === 200) {
+
+                        var sondage = JSON.parse(xmlhttp.responseText);
+
+                        document.getElementById("leSondage").innerHTML = "";
+
+                        var intitule = document.createElement("h2");
+                        var intituleTexte = document.createTextNode("Sondage "+sondage.id.valueOf());
+                        intitule.appendChild(intituleTexte);
+                        document.getElementById("leSondage").appendChild(intitule);
+
+                        var question = document.createElement("p");
+                        var questionTexte = document.createTextNode("Intitulé du sondage : "+sondage.question);
+                        question.appendChild(questionTexte);
+                        document.getElementById("leSondage").appendChild(question);
+
+
+                        var lesReponses = document.createElement("ul");
+
+                        for(var i = 0; i < sondage.reponses.length; i++) {
+                            var reponse = document.createElement("li");
+                            var reponseTexte = document.createTextNode("Réponse "+i+" : "+sondage.reponses[i]);
+                            reponse.appendChild(reponseTexte);
+                            lesReponses.appendChild(reponse);
+                        }
+
+                        document.getElementById("leSondage").appendChild(lesReponses);
+
+                    }
+                }
+            }
         }
+
     </script>
 </head>
 <body onload="init()">
-<h1>Sondage RESTful Web Service Demo</h1>
-<table>
-    <tr>
-        <td>Url de base du service REST</td>
-        <td><input type="text" id="baseurl" size="30" value="http://localhost:8080/rest"/>
-    </tr>
+<h1>Gestionnaire de sondage</h1>
 
-    <tr>
-        <td colspan="2">----------------------------------------------------- </td>
-    </tr>
-    <!--
-    <tr>
-        <td>Id du Sondage</td>
-        <td><input type="text" id="sondageid" size="10"/>
-        <td><input type="button" value="Lire le sondage" onclick="getSondage()"/></td>
-    </tr>
+<fieldset>
+    <legend>Consultation d'un sondage</legend>
+    <table>
+        <tr>
+            <td><input type="text" id="baseurl" size="30" value="http://localhost:8080/rest" hidden/>
+        </tr>
 
-    <tr>
-        <td>Options : </td>
-        <td><input type="text" readonly="true" id="libelle" size="20"/> </td>
-    </tr>
-    -->
+        <!--
+        <tr>
+            <td>Id du Sondage</td>
+            <td><input type="text" id="sondageid" size="10"/>
+            <td><input type="button" value="Lire le sondage" onclick="getSondages()"/></td>
+        </tr>
+
+        <tr>
+            <td>Options : </td>
+            <td><input type="text" readonly="true" id="libelle" size="20"/> </td>
+        </tr>
+        -->
 
 
-    <tr>
-        <td>
-            <form>
+        <tr>
+            <td>
                 <label for="lesSondages">Liste des songades : </label>
-                <select name = "lesSondages" id = "lesSondages"></select>
-                <input type="submit" value="Consulter sondage">
-            </form>
-        </td>
-    </tr>
+                <select id = "lesSondages"></select>
+                <input type="submit" value="Consulter le sondage" onclick="getSondage()">
+            </td>
+        </tr>
 
-</table>
+    </table>
+
+    <div id="leSondage">
+
+    </div>
+
+    <input type="submit" value="Effacer"/>
+
+</fieldset>
+
+<fieldset>
+    <legend>Création d'un sondage</legend>
+    <form>
+        <label for="intituleSondage">Intitulé du sondage : </label>
+        <input id="intituleSondage"/>
+        <p> <label>&nbsp;</label> <input type="submit" value="Créer le sondage"/> <input type="reset" value="Effacer"/> </p>
+    </form>
+</fieldset>
+
 </body>
 </html>
