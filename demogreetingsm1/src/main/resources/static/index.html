@@ -74,6 +74,9 @@
 
                         document.getElementById("leSondage").innerHTML = "";
 
+                        var spanButtonEffacer = document.createElement("span");
+                        spanButtonEffacer.innerHTML = '<input type="submit" value="Effacer" onclick="effacerSondage()" />';
+
                         var intitule = document.createElement("h2");
                         var intituleTexte = document.createTextNode("Sondage "+sondage.id.valueOf());
                         intitule.appendChild(intituleTexte);
@@ -95,10 +98,62 @@
                         }
 
                         document.getElementById("leSondage").appendChild(lesReponses);
+                        document.getElementById("leSondage").appendChild(spanButtonEffacer);
 
                     }
                 }
             }
+        }
+
+        function effacerSondage() {
+            document.getElementById("leSondage").innerHTML = "";
+        }
+
+        function postSondage() {
+            var baseUrl = document.getElementById("baseurl").value;
+            var url = baseUrl + "/sondage";
+            var lesInputs = document.getElementById("formSondage").elements;
+
+            var data = {};
+            data.question = lesInputs[0].value;
+            for(var index = 1; index < lesInputs.length; index++) {
+                data.propositions += lesInputs[index].value;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST",url,true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    alert("Ajout effecute" + json.question);
+                } else {
+                    alert("Error!!! -> " + xhr.responseText);
+                }
+            }
+            var json = JSON.stringify(data);
+            xhr.send(json);
+        }
+
+        var nbReponses = 0;
+
+        function creerSondage() {
+            var lesInputs = document.getElementById("formSondage").elements;
+            for(var i = 0; lesInputs.length; i++) {
+                document.getElementById("resultat").innerText += lesInputs[i].value;
+            }
+        }
+
+
+
+        function addField() {
+            var lesSondages = document.getElementById("lesReponses");
+            lesSondages.appendChild(document.createTextNode("Reponse "+nbReponses));
+            var input = document.createElement("input");
+            input.type= "text";
+            input.id = "reponse"+nbReponses;
+            lesSondages.appendChild(input);
+            nbReponses++;
         }
 
     </script>
@@ -141,17 +196,26 @@
 
     </div>
 
-    <input type="submit" value="Effacer"/>
-
 </fieldset>
 
 <fieldset>
     <legend>Création d'un sondage</legend>
-    <form>
+
+    <form id="formSondage">
         <label for="intituleSondage">Intitulé du sondage : </label>
         <input id="intituleSondage"/>
-        <p> <label>&nbsp;</label> <input type="submit" value="Créer le sondage"/> <input type="reset" value="Effacer"/> </p>
+
+        <div id="lesReponses">
+
+        </div>
     </form>
+    <button onclick="addField()">Ajouter une réponse</button>
+    <input type="submit" value="Creer le sondage" onclick="postSondage()"/>
+
+    <div id="resultat">
+
+    </div>
+
 </fieldset>
 
 </body>
