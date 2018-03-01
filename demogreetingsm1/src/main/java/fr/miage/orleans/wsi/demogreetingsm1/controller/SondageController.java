@@ -33,7 +33,7 @@ public class SondageController {
         return bd.get(id);
     }
 
-    @RequestMapping(value = "/sondage", method = RequestMethod.POST)
+    @RequestMapping(value = "/sondage", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<String> creerSondage(@RequestParam String question, @RequestParam List<String> propositions) {
         Sondage nouveauSondage = new Sondage(question,propositions);
         bd.put(nouveauSondage.getId(),nouveauSondage);

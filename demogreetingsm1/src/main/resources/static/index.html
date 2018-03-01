@@ -38,25 +38,6 @@
 
         }
 
-        /*function getSondages() {
-            var baseurl = document.getElementById("baseurl").value;
-            var sondageid = document.getElementById("sondageid").value;
-            var url = baseurl + "/sondages/" + sondageid;
-            xmlhttp.open('GET',url,true);
-            xmlhttp.send(null);
-
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4) {
-                    if ( xmlhttp.status == 200) {
-                        var sondage = JSON.parse(xmlhttp.responseText);
-                        document.getElementById("libelle").value = sondage.question;
-                    }
-                    else
-                        alert("Error!!! -> " + xmlhttp.responseText);
-                }
-            };
-        }*/
-
         function getSondage() {
 
             var baseUrl = document.getElementById("baseurl").value;
@@ -110,50 +91,59 @@
         }
 
         function postSondage() {
+
             var baseUrl = document.getElementById("baseurl").value;
             var url = baseUrl + "/sondage";
-            var lesInputs = document.getElementById("formSondage").elements;
 
-            var data = {};
-            data.question = lesInputs[0].value;
-            for(var index = 1; index < lesInputs.length; index++) {
-                data.propositions += lesInputs[index].value;
-            }
+            var intitule = "question="+document.getElementById("intitule").value;
+            var listePropositions = document.getElementsByClassName("listePropositions");
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST",url,true);
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var json = JSON.parse(xhr.responseText);
-                    alert("Ajout effecute" + json.question);
+            var propositions = "propositions=";
+            for(var index = 0; index < listePropositions.length; index++) {
+                if(index === listePropositions.length) {
+                    propositions += listePropositions[index].value;
                 } else {
-                    alert("Error!!! -> " + xhr.responseText);
+                    propositions += listePropositions[index].value+",";
                 }
             }
-            var json = JSON.stringify(data);
-            xhr.send(json);
-        }
 
-        var nbReponses = 0;
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST",url,true);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send(encodeURI(intitule+"&"+propositions));
 
-        function creerSondage() {
-            var lesInputs = document.getElementById("formSondage").elements;
-            for(var i = 0; lesInputs.length; i++) {
-                document.getElementById("resultat").innerText += lesInputs[i].value;
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 201) {
+                    var json = JSON.parse(xmlhttp.responseText);
+                    alert("Ajout effecute" + json.question);
+                } else {
+                    alert("Error!!! -> " + xmlhttp.responseText);
+                }
             }
+
         }
 
 
+        var nbPropositions = 1;
 
         function addField() {
-            var lesSondages = document.getElementById("lesReponses");
-            lesSondages.appendChild(document.createTextNode("Reponse "+nbReponses));
+
+            var lesPropositions = document.getElementById("listePropositions");
+
             var input = document.createElement("input");
             input.type= "text";
-            input.id = "reponse"+nbReponses;
-            lesSondages.appendChild(input);
-            nbReponses++;
+            input.id = "proposition" + nbPropositions + " ";
+            input.size = 10;
+
+            lesPropositions.appendChild(input);
+
+            lesPropositions.appendChild(document.createElement("BR"));
+            lesPropositions.appendChild(document.createTextNode("Proposition : " + nbPropositions));
+            lesPropositions.appendChild(input);
+
+            nbPropositions++;
+
         }
 
     </script>
@@ -167,19 +157,6 @@
         <tr>
             <td><input type="text" id="baseurl" size="30" value="http://localhost:8080/rest" hidden/>
         </tr>
-
-        <!--
-        <tr>
-            <td>Id du Sondage</td>
-            <td><input type="text" id="sondageid" size="10"/>
-            <td><input type="button" value="Lire le sondage" onclick="getSondages()"/></td>
-        </tr>
-
-        <tr>
-            <td>Options : </td>
-            <td><input type="text" readonly="true" id="libelle" size="20"/> </td>
-        </tr>
-        -->
 
 
         <tr>
@@ -201,20 +178,20 @@
 <fieldset>
     <legend>Création d'un sondage</legend>
 
-    <form id="formSondage">
-        <label for="intituleSondage">Intitulé du sondage : </label>
-        <input id="intituleSondage"/>
+    <table>
+        <tr>
+            <label for="intitule">Intitulé : </label>
+            <input type="text" id="intitule" size="10"/>
+        </tr>
 
-        <div id="lesReponses">
+        <table id="listePropositions" class="listePropositions">
+            <label for="proposition0">Proposition 0 : </label>
+            <input type="text" id="proposition0" size="10"/>
+        </table>
+        <input type="submit" value="Ajouter une proposition" onclick="addField()"/>
+        <input type="submit" value="Créer le sondage" onclick="postSondage()"/>
 
-        </div>
-    </form>
-    <button onclick="addField()">Ajouter une réponse</button>
-    <input type="submit" value="Creer le sondage" onclick="postSondage()"/>
-
-    <div id="resultat">
-
-    </div>
+    </table>
 
 </fieldset>
 
