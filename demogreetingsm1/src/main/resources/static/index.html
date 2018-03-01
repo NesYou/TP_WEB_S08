@@ -96,14 +96,13 @@
             var url = baseUrl + "/sondage";
 
             var intitule = "question="+document.getElementById("intitule").value;
-            var listePropositions = document.getElementsByClassName("listePropositions");
 
             var propositions = "propositions=";
-            for(var index = 0; index < listePropositions.length; index++) {
-                if(index === listePropositions.length) {
-                    propositions += listePropositions[index].value;
+            for(var index = 0; index < nbPropositions; index++) {
+                if(index === nbPropositions) {
+                    propositions += document.getElementById("proposition"+index).value;
                 } else {
-                    propositions += listePropositions[index].value+",";
+                    propositions += document.getElementById("proposition"+index).value+",";
                 }
             }
 
@@ -114,7 +113,7 @@
 
 
             xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 201) {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     var json = JSON.parse(xmlhttp.responseText);
                     alert("Ajout effecute" + json.question);
                 } else {
@@ -125,7 +124,7 @@
         }
 
 
-        var nbPropositions = 1;
+        var nbPropositions = 0;
 
         function addField() {
 
@@ -133,14 +132,16 @@
 
             var input = document.createElement("input");
             input.type= "text";
-            input.id = "proposition" + nbPropositions + " ";
+            input.id = "proposition" + nbPropositions;
             input.size = 10;
 
             lesPropositions.appendChild(input);
 
-            lesPropositions.appendChild(document.createElement("BR"));
-            lesPropositions.appendChild(document.createTextNode("Proposition : " + nbPropositions));
+
+            lesPropositions.appendChild(document.createTextNode("Proposition "+ nbPropositions+" : " ));
             lesPropositions.appendChild(input);
+            lesPropositions.appendChild(document.createElement("BR"));
+            lesPropositions.appendChild(document.createElement("BR"));
 
             nbPropositions++;
 
@@ -185,8 +186,7 @@
         </tr>
 
         <table id="listePropositions" class="listePropositions">
-            <label for="proposition0">Proposition 0 : </label>
-            <input type="text" id="proposition0" size="10"/>
+
         </table>
         <input type="submit" value="Ajouter une proposition" onclick="addField()"/>
         <input type="submit" value="Créer le sondage" onclick="postSondage()"/>
