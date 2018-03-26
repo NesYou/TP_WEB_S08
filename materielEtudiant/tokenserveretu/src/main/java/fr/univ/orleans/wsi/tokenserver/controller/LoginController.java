@@ -15,8 +15,8 @@ import static services.Constantes.AUTHORIZATION;
 public class LoginController {
 
 
-    private final static String SECRET_KEY = " God is real. Except when declared integer";
-    private final static String TOKEN_PREFIX = "Eeeeeeeeeeeeeeeeh MACARENA ... AHA ! o/ ";
+    private final static String SECRET_KEY = "secret";
+    private final static String TOKEN_PREFIX = "tokePre";
 
 
     private static Map<String, String> loginPassword = new HashMap<>();
@@ -40,6 +40,7 @@ public class LoginController {
 
                 JwtBuilder builder = Jwts.builder()
                         .signWith(SignatureAlgorithm.HS256,TOKEN_PREFIX)
+                        .setExpiration(new Date(System.currentTimeMillis() + 600000))
                         .setSubject(login);
 
                 String token = builder.compact();
@@ -62,24 +63,25 @@ public class LoginController {
 
     @GetMapping("/checkToken")
     public ResponseEntity<String> checkToken(@RequestHeader(AUTHORIZATION)String token) {
-
-        String login;
-
-        /* Decodage du login a partir du login */
-        try {
-            Jws<Claims> jwsClaims = Jwts.parser()
-                    .setSigningKey(SECRET_KEY.getBytes())
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""));
-            login = jwsClaims.getBody().getSubject();
-        } catch (ExpiredJwtException e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
+        //TODO
+        if(!token.equals(null)){
+            try{
+                Jws<Claims> jwsClaims = Jwts.parser()
+                        .setSigningKey(SECRET_KEY)
+                        .parseClaimsJws(token.replace(TOKEN_PREFIX,""));
+                String login = jwsClaims.getBody().getSubject();
+                if(loginPassword.containsKey(login)){
+                    return new ResponseEntity<>("le token est valide",HttpStatus.OK);
+                }
+                else{
+                    return new ResponseEntity<>("Token associé à aucun compte",HttpStatus.FORBIDDEN);
+                }
+            }catch(ExpiredJwtException e){
+                return new ResponseEntity<>("le token a expiré",HttpStatus.FORBIDDEN);
+            }
         }
-
-        if(loginPassword.containsKey(login)) {
-            return new ResponseEntity<>("Token VALIDE",HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Token NON VALIDE",HttpStatus.OK);
+        else{
+            return new ResponseEntity<>("Un token ??? où ça ?",HttpStatus.FORBIDDEN);
         }
-
     }
 }

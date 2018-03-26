@@ -1,0 +1,14 @@
+
+nsquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(†»°Ï
+>squid:S1905")Remove this unnecessary cast to "String".(¦…ã­
+Tsquid:S1118":Add a private constructor to hide the implicit public one.(¹¥©õÿÿÿÿÿ
+rsquid:S1488"]Immediately return this expression instead of assigning it to the temporary variable "liste".(ŠÅØ©
+msquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ï˜
+ssquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ñ¨Ë„úÿÿÿÿ
+\squid:S2259"GA "NullPointerException" could be thrown; "resultat2" is nullable here.(ŠÅØ©
+¶%squid:RedundantThrowsDeclarationCheck"Remove the declaration of thrown exception 'org.springframework.web.client.ResourceAccessException' which is a runtime exception.(è×¹úÿÿÿÿ
+]squid:UselessImportCheck"6Remove this unused import 'java.net.ConnectException'.(éâ¿Šüÿÿÿÿ
+¶%squid:RedundantThrowsDeclarationCheck"Remove the declaration of thrown exception 'org.springframework.web.client.ResourceAccessException' which is a runtime exception.(€õõèıÿÿÿÿ
+rsquid:S1488"]Immediately return this expression instead of assigning it to the temporary variable "token".(¦…ã­
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+ssquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(À°±Åûÿÿÿÿ

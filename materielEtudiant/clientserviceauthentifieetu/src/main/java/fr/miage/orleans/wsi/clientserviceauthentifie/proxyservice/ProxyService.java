@@ -35,13 +35,13 @@ public class ProxyService {
         RestTemplate restTemplate = new RestTemplate();
         // headers
         HttpHeaders httpHeaders = new HttpHeaders();
-// body
+        // body
         MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
         map.put(LOGIN, Arrays.asList(login));
         map.put(PASSWORD,Arrays.asList(password));
         // headers + body
         HttpEntity<MultiValueMap<String,String>> httpEntity = new HttpEntity<MultiValueMap<String,String>>(map , httpHeaders);
-// REST call for Location
+        // REST call for Location
 
     try {
         ResponseEntity<String> resultat = restTemplate.postForEntity(urlAuthentication, httpEntity, String.class);
@@ -71,7 +71,7 @@ public class ProxyService {
         MultiValueMap<String, String> map2= new LinkedMultiValueMap<String, String>();
         // headers + body
         HttpEntity<MultiValueMap<String,String>> httpEntity2 = new HttpEntity<MultiValueMap<String,String>>(map2 , httpHeaders2);
-// REST call for Location
+        // REST call for Location
         ResponseEntity<String>  resultat2 = null;
         try {
             resultat2 = restTemplate1.exchange(URL_SONDAGE, HttpMethod.GET, httpEntity2, String.class);

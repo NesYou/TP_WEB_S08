@@ -1,0 +1,6 @@
+
+>squid:S1068")Remove this unused "login" private field.(ÒûìÌ
+^squid:S2147"DCombine this catch with the one at line 52, which has the same body.(“•‡ÿÿÿÿÿ
+^squid:S2147"DCombine this catch with the one at line 86, which has the same body.(“•‡ÿÿÿÿÿ
+Fsquid:S1068",Remove this unused "password" private field.(œãë­úÿÿÿÿ
+]squid:UselessImportCheck"6Remove this unused import 'java.net.ConnectException'.(éâ¿Šüÿÿÿÿ

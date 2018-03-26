@@ -1,0 +1,6 @@
+
+ssquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Η‘Πούÿÿÿÿ
+nsquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(½£
+{squid:UselessImportCheck"TRemove this unused import 'org.springframework.web.client.HttpServerErrorException'.(ιεωÿÿÿÿ
+osquid:UselessImportCheck"HRemove this unused import 'org.springframework.web.client.RestTemplate'.(ΞφΌήϋÿÿÿÿ
+ssquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Η‘Πούÿÿÿÿ

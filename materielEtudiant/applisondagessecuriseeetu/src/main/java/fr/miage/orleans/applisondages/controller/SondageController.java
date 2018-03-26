@@ -61,27 +61,6 @@ public class SondageController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @RequestMapping(value = "{idSondage}/votes", method = RequestMethod.POST)
     public ResponseEntity<Vote> voter(
             @PathVariable("idSondage") Long id,
