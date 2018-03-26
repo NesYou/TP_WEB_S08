@@ -10,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -46,6 +47,7 @@ public class ProxyService {
     try {
         ResponseEntity<String> resultat = restTemplate.postForEntity(urlAuthentication, httpEntity, String.class);
         String token = (String)resultat.getHeaders().get(AUTHORIZATION).get(0);
+        System.out.println(token);
         return token;
 
     }
@@ -86,6 +88,13 @@ public class ProxyService {
                 throw new BadTokenException(e.getResponseHeaders().get(LOCATION).get(0));
             }
 
+        }
+        catch (HttpServerErrorException e) {
+            System.out.println(e.getStatusCode().value());
+            if(e.getStatusCode().value()==HttpStatus.UNAUTHORIZED.value()){
+                System.out.println("non autorisé");
+            }
+            throw new BadTokenException("http://localhost:8000/login");
         }
 
 

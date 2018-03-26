@@ -38,24 +38,26 @@ public class LoginController {
 
             if(loginPassword.get(login).equals(password)) {
 
+                Claims claims = Jwts.claims().setSubject(login);
+
                 JwtBuilder builder = Jwts.builder()
-                        .signWith(SignatureAlgorithm.HS256,TOKEN_PREFIX)
+                        .setClaims(claims)
                         .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                        .setSubject(login);
+                        .signWith(SignatureAlgorithm.HS256, SECRET_KEY);
 
                 String token = builder.compact();
                 HttpHeaders header = new HttpHeaders();
-                header.set("token",token);
+                header.set("Authorization",token);
                 return new ResponseEntity<>("TOKEN généré...",header,HttpStatus.OK);
 
             } else { /* Le mot de passe est incorrect */
 
-                return new ResponseEntity<>("Mot de passe incorrect",HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("Mot de passe incorrect",HttpStatus.UNAUTHORIZED);
 
             }
         } else { /* L'utilisateur n'existe pas */
 
-            return new ResponseEntity<>("L'utilisateur n'existe pas",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("L'utilisateur n'existe pas",HttpStatus.UNAUTHORIZED);
 
         }
 
@@ -74,14 +76,14 @@ public class LoginController {
                     return new ResponseEntity<>("le token est valide",HttpStatus.OK);
                 }
                 else{
-                    return new ResponseEntity<>("Token associé à aucun compte",HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("Token associé à aucun compte",HttpStatus.UNAUTHORIZED);
                 }
             }catch(ExpiredJwtException e){
-                return new ResponseEntity<>("le token a expiré",HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("le token a expiré",HttpStatus.UNAUTHORIZED);
             }
         }
         else{
-            return new ResponseEntity<>("Un token ??? où ça ?",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Un token ??? où ça ?",HttpStatus.UNAUTHORIZED);
         }
     }
 }

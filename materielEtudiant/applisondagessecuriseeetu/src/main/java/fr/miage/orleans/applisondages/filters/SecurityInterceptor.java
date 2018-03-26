@@ -14,24 +14,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
+import static services.Constantes.AUTHORIZATION;
 import static services.Constantes.TOKEN;
 
 public class SecurityInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(SecurityInterceptor.class);
 
-    @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-
         RestTemplate restTemplate1 = new RestTemplate();
         String URL_SONDAGE="http://localhost:8000/checkToken";
-        ResponseEntity<String> resultat2 =null;
+        ResponseEntity<String>  resultat2 =null;
 
-        String token= httpServletRequest.getHeader("Authorization");
+        String token= httpServletRequest.getHeader("Token");
         //on verifie que le token existe bien
-        if (token!=null){
+
+        if(token.isEmpty() || (token == null)) {
+            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+            httpServletResponse.setHeader("location","http://localhost:8000/login");
+            System.out.println("token empty ?");
+            return false;
+        } else {
             // headers
             HttpHeaders httpHeaders2 = new HttpHeaders();
-            httpHeaders2.set("Authorization", token);
+            httpHeaders2.put(AUTHORIZATION, Arrays.asList(token));
 
             // body
             MultiValueMap<String, String> map2= new LinkedMultiValueMap<String, String>();
@@ -41,14 +46,17 @@ public class SecurityInterceptor implements HandlerInterceptor {
 
             // REST call for Location
             resultat2 = restTemplate1.exchange(URL_SONDAGE, HttpMethod.GET, httpEntity2, String.class);
+            System.out.println("affichage erreur" +resultat2.getStatusCode().value());
+            httpServletResponse.setStatus(resultat2.getStatusCodeValue());
             if (resultat2.getStatusCode().value()!= HttpStatus.OK.value()){
-                httpServletResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+                System.out.println("non OK value ?");
                 return false;
             }
+            System.out.println("error dans le else");
             return true;
 
         }
-        return false;
+
 
     }
 
