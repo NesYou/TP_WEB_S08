@@ -99,7 +99,7 @@
 
             var propositions = "propositions=";
             for(var index = 0; index < nbPropositions; index++) {
-                if(index === nbPropositions) {
+                if(index === nbPropositions - 1) {
                     propositions += document.getElementById("proposition"+index).value;
                 } else {
                     propositions += document.getElementById("proposition"+index).value+",";
