@@ -1,0 +1,4 @@
+
+1squid:S1220""Move this file to a named package.
+Bsquid:S1481"-Remove this unused "endpoint" local variable.(ßü§‘
+Qsquid:S1854"<Remove this useless assignment to local variable "endpoint".(ßü§‘

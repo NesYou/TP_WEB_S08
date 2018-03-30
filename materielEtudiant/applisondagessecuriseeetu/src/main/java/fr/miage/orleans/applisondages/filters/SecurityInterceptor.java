@@ -21,6 +21,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(SecurityInterceptor.class);
 
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+
         RestTemplate restTemplate1 = new RestTemplate();
         String URL_SONDAGE="http://localhost:8000/checkToken";
         ResponseEntity<String>  resultat2 =null;
@@ -56,7 +57,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
             return true;
 
         }
-
 
     }
 
